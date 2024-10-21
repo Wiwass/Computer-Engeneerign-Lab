@@ -11,9 +11,9 @@ int comp (const void * elem1, const void * elem2)
 int main(int argc, char* argv[]) 
 {
     int x[argc];
-    for(int i=0;i<argc;i++){
-        x[i]=//funzione di traduzione da char a int dell'argv[i]
-    }
+    for(int i=0;i<argc;i++)
+        x[i]=atoi(argv[i]); // uso atoi al posto di strol perchè non ha senso complicarsi la vita e non so esattamente come vengano passati sull'argv gli argomenti
+    
 
     qsort (x, sizeof(x)/sizeof(*x), sizeof(*x), comp);
     
