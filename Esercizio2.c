@@ -10,17 +10,19 @@ int comp (const void * elem1, const void * elem2)
 }
 int main(int argc, char* argv[]) 
 {
-    int x[argc];
-    for(int i=0;i<argc;i++)
+    if(argc==1)
+        return 0;
+    int x[argc-1];
+    for(int i=1;i<=argc;i++)
         x[i]=atoi(argv[i]); // uso atoi al posto di strol perchè non ha senso complicarsi la vita e non so esattamente come vengano passati sull'argv gli argomenti
     
 
     qsort (x, sizeof(x)/sizeof(*x), sizeof(*x), comp);
     
     printf("%d\n",x[0]);
-    printf("%d\n",x[argc-1]);
+    printf("%d\n",x[argc-2]);
     
-    for (int i = 0 ; i < 10 ; i++)
+    for (int i = 0 ; i < argc-1 ; i++)
         printf ("%d ", x[i]);
 
     return 0;
