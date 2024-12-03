@@ -41,15 +41,17 @@ void order(struct head*head,int type){
             min=current;
             min_prev=prev;
         }
+        current=current->next;
+    }
         current=base->next;
         base->next=min;
-        min_prev=min->next;
+        min_prev->next=min->next;
         min->next=current;
         conta++;
 
-        head->first=base;
+        base=base->next;
 
-    }
+    
 
 
     while(conta < head->size-1){ 
@@ -58,6 +60,7 @@ void order(struct head*head,int type){
                 min=current;
                 min_prev=prev;
             }
+            current=current->next;
         }
         if(current->popolazione<min->popolazione){
             min=current;
@@ -65,7 +68,7 @@ void order(struct head*head,int type){
         }
         current=base->next;  //scambio dei due valori
         base->next=min;
-        min_prev=min->next;
+        min_prev->next=min->next;
         min->next=current;
         conta++;
     
