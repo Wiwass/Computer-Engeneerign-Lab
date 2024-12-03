@@ -105,7 +105,9 @@ void remove_city(char* name, struct head* head){
 
     while(current->next!=NULL){
         if(current->next->name==name){
+          	struct city* ptr=current->next;
             current->next=current->next->next;
+            free(ptr);
             head->size--;
             return;
         }
