@@ -119,6 +119,7 @@ void remove_city(char* name, struct head* head){
 void add_city(char* name, int popolazione, int area, struct head* head) {
     if (head->size == 0) {
         struct city *new_city = (struct city*)malloc(sizeof(struct city));
+        new_city->name = (char*)malloc(sizeof(char)*strlen(name)+1);
         strcpy(new_city->name, name);
         new_city->popolazione = popolazione;
         new_city->area = area;
@@ -132,6 +133,7 @@ void add_city(char* name, int popolazione, int area, struct head* head) {
         current = current->next;
     }
     struct city *new_city = (struct city*)malloc(sizeof(struct city));
+    new_city->name = (char*)malloc(sizeof(char)*strlen(name)+1);
     strcpy(new_city->name, name);
     new_city->popolazione = popolazione;
     new_city->area = area;
