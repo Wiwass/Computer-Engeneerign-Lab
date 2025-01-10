@@ -1,0 +1,69 @@
+Exercise 1. Sequences of ordered even and odd numbers
+Write a program that reads a sequence of positive integers (maximum 100), from a file passed as argument, terminated by 0, counts the total number of entered numbers and prints it, then creates two linked lists, one containing even integers in ascending order and one containing odd integers in descending order, and prints the number of elements and the elements of the two linked lists, one linked list content per row.
+Execute the program for the sequence stored in file sequence1.txt and for the sequence stored in file sequence2.txt (both included in the archive input.zip) providing the requested indications for both sequences.
+Please include comments to describe the sections of your code.
+
+Exercise 2. Write a program to count and print the total number of alphabets, the total number of digits and the total number of other remaining characters in a file. The filename is passed as argument to the program. Execute the program for the text stored in file example.txt (included in the archive input.zip).
+Please include comments to describe the sections of your code.
+
+
+
+QUESTIONS
+Q1. Advantages of linked list representation of binary trees over arrays?
+a) dynamic size
+b) ease of insertion/deletion
+c) ease in randomly accessing a node
+d) both dynamic size and ease in insertion/deletion
+
+
+Q2. Disadvantages of linked list representation of binary trees over arrays?
+a) Randomly accessing is not possible
+b) Extra memory for a pointer is needed with every element in the list
+c) Difficulty in deletion
+d) Random access is not possible and extra memory with every element
+
+
+Q3. Which of the following traversing algorithm is not used to traverse in a tree?
+a) Post order
+b) Pre order
+c) Post order
+d) Randomized
+
+
+Q4. Differentiate between the below definitions
+const char *p;
+char * const p;
+const char * const p;
+
+
+Q5. What will this code snippet display?
+void display(unsigned int n)
+{
+    if(n > 0)
+    {
+        display(n-1);
+        printf("%d ", n);
+    }
+}
+a) numbers from n to 1
+b) numbers from n to 0
+c) numbers from 1 to n
+d) numbers from 0 to n
+
+
+Q6. Give the output of the following program:
+#include <stdio.h>
+int main(void)
+{
+    int arr[] = {20,40};
+    int *a = arr;
+    *a++;
+    printf("arr[0] = %d, arr[1] = %d, *a = %d",
+    arr[0], arr[1], *a);
+    return 0;
+} 
+
+a) arr[0] = 20, arr[1] = 40, *a = 20
+b) arr[0] = 20, arr[1] = 40, *a = 21
+c) arr[0] = 20, arr[1] = 40, *a = 40
+d) arr[0] = 20, arr[1] = 40, *a = 41
