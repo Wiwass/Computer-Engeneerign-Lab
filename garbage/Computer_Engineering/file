@@ -1,0 +1,92 @@
+/*
+
+Submitted by Samy Vilar <samy_vilar> on 10/28/2024
+
+
+Given the modest constraints and the monotonic nature of addition
+
+we can simply iterate ascending from 1 up to n, accumulating
+
+all those entries that are not banned all the while not exceeding
+
+the given maxSum;
+
+To determine whether or not a delta is banned we can either
+
+use a hash-table or sort the banned units, either case 
+
+would take O(n) time, though the latter would allow for 
+
+O(1) additional-space through in-place sort though at 
+
+the cost of an additional log(n) factor toward our time;
+
+
+we micro-optimize by noting should n * (n + 1)/2 <= limit
+
+then the best we could hope to achived would be n minus
+
+all those that are lesser than or equal to n and are banned;
+
+*/
+
+
+#pragma GCC target("bmi,bmi2,tune=znver3")
+
+unsigned maxCount(unsigned *banned, size_t cnt, size_t n, size_t limit) {
+
+    #define have(self, id) ((self)[(id) >> 6] &  (1UL << ((id) & 63UL)))
+
+    #define mark(self, id) ((self)[(id) >> 6] |= (1UL << ((id) & 63UL)))
+
+    #define flip(self, id) ((self)[(id) >> 6] ^= (1UL << ((id) & 63UL)))
+
+
+    static size_t
+
+        seen[(10000 >> 6) + 1],
+
+        last = 0;        
+
+
+    memset(seen, 0, ((last >> 6) + 1) * sizeof(seen[0]));
+
+    last = n;
+
+
+    --banned; do 
+
+        if (banned[cnt] <= n)
+
+            mark(seen, banned[cnt]);
+
+    while (--cnt);
+
+
+    size_t
+
+        at = 1; do
+
+        if (have(seen, at) == 0) {
+
+            if (limit < at) 
+
+                return cnt;
+
+            
+
+            limit -= at;                
+
+            cnt++;
+
+        }  
+
+    while (++at <= n);        
+
+    
+
+    return cnt;
+
+}
+
+

@@ -1,0 +1,16 @@
+Appunti:
+Tutti i programmi c/c++ devono contenere una funzione main e il corpo del programma deve essere contenuto tra {}
+
+Durante la compilazione:
+-vengono cancellati i commenti
+-# indica istruzioni a cui dare accesso al programma (librerie)
+-Il compilatore analizza il codice e lo traduce in binario
+-Il programma viene collegato alle istruzioni rilevanti
+
+Il linker lavora sugli oggetti costruiti dalle compilazioni
+
+istruzioni di print:
+\t == tab
+\n == a capo
+pg 14 slides 2
+
