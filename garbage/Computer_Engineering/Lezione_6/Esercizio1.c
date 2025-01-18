@@ -165,20 +165,20 @@ int main(void)
 		temp_name=getfield(tmp, 1);
 		temp_house=getfield(tmp, 2);
 		score=(int)getfield(tmp, 3);
-		add_driver(dlist,createPilotNode(temp_name,temp_house_name,score);
-		add_house(hlist,createTeamNode(temp_house,score);  
+		add_driver(dlist,createPilotNode(temp_name,temp_house_name,score));
+		add_house(hlist,createTeamNode(temp_house,score));  
         free(tmp);
     }
     for(int i=0;i<22;i++)
     {
-	char input
+	char input;
 	FILE* stream = fopen(input,"r");
 		char* tmp = strdup(line);
 		temp_name=getfield(tmp, 1);
 		temp_house=getfield(tmp, 2);
 		score=(int)getfield(tmp, 3);
-		add_driver(dlist,createPilotNode(temp_name,temp_house_name,score);
-		add_house(hlist,createTeamNode(temp_house,score);  
+		add_driver(dlist,createPilotNode(temp_name,temp_house_name,score));
+		add_house(hlist,createTeamNode(temp_house,score));  
         free(tmp);
 		}
     return 0;

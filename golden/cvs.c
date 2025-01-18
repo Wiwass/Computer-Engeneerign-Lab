@@ -1,3 +1,4 @@
+//strcpy(dove,cosa);
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,6 +22,7 @@ int main() {
     fclose(fp);
     return 0;
 }
+
 
 int stringToInt(const char* str) {
     // Verifica input valido
@@ -46,15 +48,4 @@ int stringToInt(const char* str) {
     }
 
     return (int)result;
-}
-
-/**
- * Funzione per convertire un intero in una stringa in base 10
- * @param value: intero da convertire
- * @param str: buffer di destinazione per la stringa convertita
- * @return: puntatore alla stringa convertita
- */
-char* intToString(int value, char* str) {
-    sprintf(str, "%d", value);
-    return str;
 }
