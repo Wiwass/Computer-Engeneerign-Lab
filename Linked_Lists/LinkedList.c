@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 struct head {
     int size;
@@ -15,70 +16,72 @@ struct city {
 };
 
 
-void order(struct head*head,int type){
-
-    if(head->size==0 || head->size==1){
+void order_area(struct head* head) {
+    if (head->size == 0 || head->size == 1) {
         return;
     }
 
-  //  if(type==0){
-  //      #define parameter nome
-  //  }
-  //  else if(type==1){
-  //      #define parameter area
-  //  }
+    struct city* i;
+    struct city* j;
+    int temp_popolazione;
+    int temp_area;
+    char* temp_name;
 
+    for (i = head->first; i != NULL; i = i->next) {
+        for (j = i->next; j != NULL; j = j->next) {
+            if (i->area > j->area) {
+                // Scambia popolazione
+                temp_popolazione = i->popolazione;
+                i->popolazione = j->popolazione;
+                j->popolazione = temp_popolazione;
 
-    int conta=0;
-    struct city* current = head->first;
-    struct city* min = head->first;
-    struct city* base = head->first;
-    struct city* prev = head->first;
-    struct city* min_prev = head->first;
+                // Scambia area
+                temp_area = i->area;
+                i->area = j->area;
+                j->area = temp_area;
 
-    while(current->next!=NULL){  //caso0
-        if(current->popolazione<min->popolazione){
-            min=current;
-            min_prev=prev;
-        }
-        current=current->next;
-    }
-        current=base->next;
-        base->next=min;
-        min_prev->next=min->next;
-        min->next=current;
-        conta++;
-
-        base=base->next;
-
-    
-
-
-    while(conta < head->size-1){ 
-        while(current->next!=NULL){
-            if(current->popolazione<min->popolazione){
-                min=current;
-                min_prev=prev;
+                // Scambia nome
+                temp_name = i->name;
+                i->name = j->name;
+                j->name = temp_name;
             }
-            current=current->next;
         }
-        if(current->popolazione<min->popolazione){
-            min=current;
-            min_prev=prev;
-        }
-        current=base->next;  //scambio dei due valori
-        base->next=min;
-        min_prev->next=min->next;
-        min->next=current;
-        conta++;
-    
-        base=base->next;  //ricollocazione puntatori
-        current=base->next;
-        prev=base;
-        min=base->next;
-        min_prev=base;
     }
 }
+
+void order_population(struct head* head) {
+    if (head->size == 0 || head->size == 1) {
+        return;
+    }
+
+    struct city* i;
+    struct city* j;
+    int temp_popolazione;
+    int temp_area;
+    char* temp_name;
+
+    for (i = head->first; i != NULL; i = i->next) {
+        for (j = i->next; j != NULL; j = j->next) {
+            if (i->popolazione > j->popolazione) {
+                // Scambia popolazione
+                temp_popolazione = i->popolazione;
+                i->popolazione = j->popolazione;
+                j->popolazione = temp_popolazione;
+
+                // Scambia area
+                temp_area = i->area;
+                i->area = j->area;
+                j->area = temp_area;
+
+                // Scambia nome
+                temp_name = i->name;
+                i->name = j->name;
+                j->name = temp_name;
+            }
+        }
+    }
+}
+
 
 void biggest_city(struct head*head){
     struct city* current = head->first;
@@ -148,6 +151,24 @@ void add_city(char* name, int popolazione, int area, struct head* head) {
     return;
 }
 
+int random_population() {
+    return rand() % 1000 + 1; // Genera un numero casuale tra 1 e 1000
+}
+
+char* random_city_name() {
+    static char name[10];
+    int len = rand() % 5 + 5; // Lunghezza del nome tra 5 e 9 caratteri
+    for (int i = 0; i < len; i++) {
+        name[i] = 'a' + rand() % 26;
+    }
+    name[len] = '\0';
+    return name;
+}
+
+int random_area() {
+    return rand() % 500 + 1; // Genera un numero casuale tra 1 e 500
+}
+
 int main(int argc, char* argv[]) 
 {
     int conta=0;
@@ -156,15 +177,23 @@ int main(int argc, char* argv[])
     head->size=0;
     head->first=NULL;
 
+    srand(time(NULL)); // Inizializza il generatore di numeri casuali
+
     while(conta++<10){
-        char name[]="city";
-        int popolazione=conta;
-        int area=conta/2;
-        add_city(name,popolazione,area,head);
+        char* name = random_city_name(); // Usa la funzione per generare un nome di città casuale
+        int popolazione = random_population(); // Usa la funzione per generare una popolazione casuale
+        int area = random_area(); // Usa la funzione per generare un'area casuale
+        add_city(name, popolazione, area, head);
     }
 
+    
     print_city(head);
-    order(head,0);
+    order_area(head);
+    printf("\n");
+    print_city(head);
+    printf("\n");
+    order_population(head);
+    printf("\n");
     print_city(head);
 
     return 0;
