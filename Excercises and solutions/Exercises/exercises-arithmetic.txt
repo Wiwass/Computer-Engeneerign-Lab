@@ -1,0 +1,24 @@
+Exercise 1: Basic Arithmetic Operations
+Write a C program that does the following:
+
+Declares two integer variables, a and b, and initializes them with values of your choice.
+Calculates and prints the sum, difference, product, and quotient of a and b.
+
+Exercise 2: Modulus Operation
+Write a C program that calculates and prints the remainder of a divided by b using the modulus operator.
+
+Exercise 3: Compound Assignment
+Write a C program that demonstrates the use of compound assignment operators (e.g., +=, -=) to update the values of variables a and b. Increase a by 3 and decrease b by 2 using compound assignment operators, and then print the updated values.
+
+Exercise 4: Precedence and Parentheses
+Write a C program that demonstrates the importance of operator precedence and the use of parentheses. Calculate and print the result of the following expression: 2 * (5 + 3) / 4 without parentheses too.
+
+Exercise 5: Currency Conversion
+
+Write a C program that performs currency conversion from US Dollars (USD) to Euros (EUR) and British Pounds (GBP). The program should:
+
+considering the amounts 1,..,10 USD calculate the equivalent amounts in EUR and GBP using the following exchange rates:
+1 USD = 0.91 EUR
+1 USD = 0.76 GBP
+Display a table with the amounts in USD and the converted amounts in EUR and GBP.
+

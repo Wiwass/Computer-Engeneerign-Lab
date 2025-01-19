@@ -1,0 +1,20 @@
+Tokyo, Japan;14000000
+Delhi, India;31000000
+Beijing, China;21000000
+London, United Kingdom;9500000
+Mexico City, Mexico;9950000
+Moscow, Russia;12000000
+Cairo, Egypt;20000000
+Brasilia, Brazil;3100000
+Paris, France;2050000
+Berlin, Germany;3050000
+Rome, Italy;2000000
+Ottawa, Canada;1000000
+Canberra, Australia;400000
+Ankara, Turkey;5000000
+Bangkok, Thailand;8000000
+Nairobi, Kenya;4000000
+Shanghai, China;30800000
+Buenos Aires, Argentina;3300000
+Teheran, Iran;9000000
+Johannesburg, South Africa;5200000

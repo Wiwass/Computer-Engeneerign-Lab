@@ -1,0 +1,20 @@
+Seoul, South Korea;10000000
+Bangkok, Thailand;8300000
+Lima, Peru;9030000
+Oslo, Norway;700000
+Hanoi, Vietnam;8050000
+Islamabad, Pakistan;2500000
+Vienna, Austria;2020000
+Cape Town, South Africa;4200000
+Dublin, Ireland;1100000
+Bratislava, Slovakia;450000
+Accra, Ghana;2400000
+Manila, Philippines;13000000
+Warsaw, Poland;1700000
+Amman, Jordan;4280000
+Kabul, Afghanistan;4155000
+Sofia, Bulgaria;1250000
+Dakar, Senegal;2456000
+Port Moresby, Papua New Guinea;420000
+Caracas, Venezuela;2365000
+Zagreb, Croatia;855000
