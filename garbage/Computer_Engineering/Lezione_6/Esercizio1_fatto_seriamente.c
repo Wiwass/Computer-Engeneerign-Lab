@@ -120,8 +120,8 @@ void sortDByValue(struct DList* list) {
     struct driver* i;
     struct driver* j;
     int temp_value;
-    char* temp_title;
-    char* temp_house;
+    char temp_title[MAX_NAME+1];
+    char temp_house[MAX_TEAM+1];
 
     for (i = list->head; i != NULL; i = i->next) {
         for (j = i->next; j != NULL; j = j->next) {
@@ -151,7 +151,7 @@ void sortHByValue(struct HList* list) {
     struct house* i;
     struct house* j;
     int temp_value;
-    char* temp_title;
+    char temp_title[MAX_TEAM+1];
 
     for (i = list->head; i != NULL; i = i->next) {
         for (j = i->next; j != NULL; j = j->next) {
@@ -252,8 +252,8 @@ int main(){
                     d->value+=points;
                     h->value+=points;
                 }
-                printDList(drivers);
-                printHList(houses);
+                //printDList(drivers);
+                //printHList(houses);
                          
             }
             conta++;
@@ -268,7 +268,9 @@ int main(){
 
     sortDByValue(drivers);
     sortHByValue(houses);
+    
     printDList(drivers);
+    printf("\n");
     printHList(houses);
     
 return 0;
