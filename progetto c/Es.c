@@ -1,6 +1,28 @@
+/*
+Questo programma è stato realizzato da: Freschet Simone 2066732
+
+Il programma è un gestionale per la gestione di dipendenti e dipartimenti di un'azienda.
+Tutte le funzioni del programma sono abbastanza standard, lascio solo una nota per quanto riguarda la correctness dei dati inseriti dagli utenti.
+Il programma è stato realizzato così da poter essere più facilmente modulato nel futuro soprattutto per quanto riguarda l'inserimento dati:
+- per il nome e il cognome non sono state implementate delle restrizioni, quindi è possibile inserire qualsiasi tipo di carattere
+- per l'id fiscale non sono state implementate delle restrizioni se non che non sia di esattamente 16 caratteri
+- per il salario non sono state implementate delle restrizioni se non che non sia un numero intero
+ecc..
+Visto che non era ben speficiata la consegna ho costruito delle funzioni di correctness, che al momento controllano solamente che i dati inseriti non siano negativi, ma che possono tranquillamente essere e modificate in base alle esigenze per aggiungere parametri di controllo.
+Un esempio potrebbe essere un tetto massimo ai giorni di ferie, o di aumento di salario, ecc..
+
+
+
+
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+
+// le lunghezze dei parametri nomi cognomi e id fiscali sono scelti in maniera completamente arbitraria
 
 #define MAX_NAME 20
 #define MAX_SURNAME 20
@@ -53,7 +75,7 @@ struct DList* initDList() {
 struct employee* searchEByTaxID(struct EList* list, const char* tax_id) {
     struct employee* current = list->head;
     while (current != NULL) {
-        if (strcmp(current->tax_id, tax_id) == 0) return current;
+        if (strcmp(current->tax_id, tax_id) == 0){return current;}
         current = current->next;
     }
     return NULL;
@@ -62,14 +84,16 @@ struct employee* searchEByTaxID(struct EList* list, const char* tax_id) {
 struct department* searchDByName(struct DList* list, const char* name) {
     struct department* current = list->head;
     while (current != NULL) {
-        if (strcmp(current->name, name) == 0) return current;
+        if (strcmp(current->name, name) == 0){
+            return current;
+        }
         current = current->next;
     }
     return NULL;
 }
 
 // Inserimento
-void Einsert(struct EList* list, const char* name, const char* surname, const char* tax_id, int salary, int vacation_days, const char* department, int level) {
+void Einsert(struct EList* list, const char* name, const char* surname, const char* tax_id, int salary, int vacation_days, int sick_days, const char* department, int level) {
     if (searchEByTaxID(list, tax_id) != NULL) {
         return;
     }
@@ -79,7 +103,7 @@ void Einsert(struct EList* list, const char* name, const char* surname, const ch
     strcpy(newNode->tax_id, tax_id);
     newNode->salary = salary;
     newNode->vacation_days = vacation_days;
-    newNode->sick_days = 0;
+    newNode->sick_days = sick_days;
     strcpy(newNode->department, department);
     newNode->level = level;
     newNode->next = list->head;
@@ -99,13 +123,20 @@ void Dinsert(struct DList* list, const char* name) {
 }
 
 // Modifica
-void modifyDepartment(struct DList* list, const char* old_name, const char* new_name) {
+void modifyDepartment(struct DList* list, struct EList* elist, const char* old_name, const char* new_name) { 
     struct department* dept = searchDByName(list, old_name);
     if (dept != NULL) {
         strcpy(dept->name, new_name);
     }
-}
 
+    struct employee* current = elist->head; // cambio il nome del dipartimento in tutti i dipendenti
+    while (current != NULL) {
+        if (strcmp(current->department, old_name) == 0) {
+            strcpy(current->department, new_name);
+        }
+        current = current->next;
+    }
+}
 void deleteEmployee(struct EList* list, const char* tax_id) {
     struct employee* current = list->head;
     struct employee* prev = NULL;
@@ -113,14 +144,15 @@ void deleteEmployee(struct EList* list, const char* tax_id) {
         prev = current;
         current = current->next;
     }
-    if (current == NULL) return;
-    if (prev == NULL) {
+    if (current == NULL) return;  // dipendente non trovato
+    if (prev == NULL) {   // se l'elemento da eliminare è il primo
         list->head = current->next;
     } else {
-        prev->next = current->next;
+        prev->next = current->next;  // caso "base"
     }
     free(current);
     list->size--;
+    printf("Dipendente eliminato con successo.\n");
 }
 
 void increaseSalary(struct EList* list, const char* tax_id, int amount) {
@@ -194,14 +226,57 @@ void sortEmployeesBySalary(struct EList* list) {
 
     struct employee* i;
     struct employee* j;
-    struct employee temp;
+    int temp_salary;
+    int temp_vacation_days;
+    int temp_sick_days;
+    int temp_level;
+    char temp_name[MAX_NAME+1];
+    char temp_surname[MAX_SURNAME+1];
+    char temp_tax_id[MAX_TAX_ID+1];
+    char temp_department[MAX_DEPARTMENT+1];
 
     for (i = list->head; i != NULL; i = i->next) {
         for (j = i->next; j != NULL; j = j->next) {
             if (i->salary > j->salary) {
-                temp = *i;
-                *i = *j;
-                *j = temp;
+                // Scambia salary
+                temp_salary = i->salary;
+                i->salary = j->salary;
+                j->salary = temp_salary;
+
+                // Scambia vacation_days
+                temp_vacation_days = i->vacation_days;
+                i->vacation_days = j->vacation_days;
+                j->vacation_days = temp_vacation_days;
+
+                // Scambia sick_days
+                temp_sick_days = i->sick_days;
+                i->sick_days = j->sick_days;
+                j->sick_days = temp_sick_days;
+
+                // Scambia level
+                temp_level = i->level;
+                i->level = j->level;
+                j->level = temp_level;
+
+                // Scambia name
+                strcpy(temp_name, i->name);
+                strcpy(i->name, j->name);
+                strcpy(j->name, temp_name);
+
+                // Scambia surname
+                strcpy(temp_surname, i->surname);
+                strcpy(i->surname, j->surname);
+                strcpy(j->surname, temp_surname);
+
+                // Scambia tax_id
+                strcpy(temp_tax_id, i->tax_id);
+                strcpy(i->tax_id, j->tax_id);
+                strcpy(j->tax_id, temp_tax_id);
+
+                // Scambia department
+                strcpy(temp_department, i->department);
+                strcpy(i->department, j->department);
+                strcpy(j->department, temp_department);
             }
         }
     }
@@ -212,14 +287,57 @@ void sortEmployeesByLevel(struct EList* list) {
 
     struct employee* i;
     struct employee* j;
-    struct employee temp;
+    int temp_salary;
+    int temp_vacation_days;
+    int temp_sick_days;
+    int temp_level;
+    char temp_name[MAX_NAME+1];
+    char temp_surname[MAX_SURNAME+1];
+    char temp_tax_id[MAX_TAX_ID+1];
+    char temp_department[MAX_DEPARTMENT+1];
 
     for (i = list->head; i != NULL; i = i->next) {
         for (j = i->next; j != NULL; j = j->next) {
             if (i->level > j->level) {
-                temp = *i;
-                *i = *j;
-                *j = temp;
+                // Scambia salary
+                temp_salary = i->salary;
+                i->salary = j->salary;
+                j->salary = temp_salary;
+
+                // Scambia vacation_days
+                temp_vacation_days = i->vacation_days;
+                i->vacation_days = j->vacation_days;
+                j->vacation_days = temp_vacation_days;
+
+                // Scambia sick_days
+                temp_sick_days = i->sick_days;
+                i->sick_days = j->sick_days;
+                j->sick_days = temp_sick_days;
+
+                // Scambia level
+                temp_level = i->level;
+                i->level = j->level;
+                j->level = temp_level;
+
+                // Scambia name
+                strcpy(temp_name, i->name);
+                strcpy(i->name, j->name);
+                strcpy(j->name, temp_name);
+
+                // Scambia surname
+                strcpy(temp_surname, i->surname);
+                strcpy(i->surname, j->surname);
+                strcpy(j->surname, temp_surname);
+
+                // Scambia tax_id
+                strcpy(temp_tax_id, i->tax_id);
+                strcpy(i->tax_id, j->tax_id);
+                strcpy(j->tax_id, temp_tax_id);
+
+                // Scambia department
+                strcpy(temp_department, i->department);
+                strcpy(i->department, j->department);
+                strcpy(j->department, temp_department);
             }
         }
     }
@@ -248,17 +366,17 @@ void saveData(struct EList* employees, struct DList* departments) {
     fclose(fp);
 }
 
-void loadData(struct EList* employees, struct DList* departments) {
+void loadData(struct EList* employees, struct DList* departments) {  // carico i dati nelle rispettive liste dal file testuale data.txt che funziona da registro
     FILE* fp = fopen("data.txt", "r");
     if (!fp) {
         printf("Impossibile aprire il file per il caricamento\n");
         return;
     }
 
-    char line[256];
+    char line[256];  // buffer per la lettura di una riga dal file di lunghezza massima 256 >> MAX_NAME+MAX_SURNAME+MAX_TAX_ID+MAX_DEPARTMENT+5
     while (fgets(line, sizeof(line), fp)) {
         char* token = strtok(line, ";");
-        if (token[0] == 'E') {
+        if (token[0] == 'E') { // se la prima lettera della riga è E allora è un dipendente
             char name[MAX_NAME+1];
             char surname[MAX_SURNAME+1];
             char tax_id[MAX_TAX_ID+1];
@@ -285,20 +403,83 @@ void loadData(struct EList* employees, struct DList* departments) {
             token = strtok(NULL, ";");
             level = atoi(token);
 
-            Einsert(employees, name, surname, tax_id, salary, vacation_days, department, level);
-        } else if (token[0] == 'D') {
+            Einsert(employees, name, surname, tax_id, salary, vacation_days, sick_days, department, level);
+
+        } else if (token[0] == 'D') { // se la prima lettera della riga è D allora è un dipartimento
             char name[MAX_DEPARTMENT+1];
             token = strtok(NULL, ";");
             strcpy(name, token);
+            name[strcspn(name, "\n")] = 0;
             Dinsert(departments, name);
         }
     }
 
     fclose(fp);
 }
+bool nameCorrectness(char* name) {
+    if (strlen(name) > MAX_NAME) return false;
+    return true;
+}
+bool departmentExists(char* department, struct DList* departments) {
+    struct department* current =searchDByName(departments, department);
+    if (current != NULL) {
+        return true;
+    }
+    return false;
+    
+}
+bool departmentCorrectness(char* department, struct DList* departments) {
+    if (strlen(department) > MAX_DEPARTMENT) return false;
+    struct department* current = departments->head;
+    while (current != NULL) {
+        if (strcmp(current->name, department) == 0) {  //se esiste un dipartimento con lo stesso nome allora restituisci false
+            return false;
+        }
+        current = current->next;
+    }
+    return true;
+}
+bool surnameCorrectness(char* surname) {
+    if (strlen(surname) > MAX_SURNAME) return false;
+    return true;
+}
+bool taxIDExists(char* tax_id, struct EList* list) {
+    if (strlen(tax_id) != MAX_TAX_ID) return false;
+    struct employee* current = list->head;
+    while (current != NULL) {
+        if (strcmp(current->tax_id, tax_id) == 0) {
+            return true;
+        }
+        current = current->next;
+    }
+    return false;
+}
+bool taxIDCorrectness(char* tax_id, struct EList* list) {
+    if (strlen(tax_id) != MAX_TAX_ID) return false;
+    struct employee* current = list->head;
+    while (current != NULL) {
+        if (strcmp(current->tax_id, tax_id) == 0) {
+            return false;
+        }
+        current = current->next;
+    }
+    return true;
+}
+bool salaryCorrectness(int salary) {
+    if (salary < 0) return false;
+    return true;
+}
+bool vacationDaysCorrectness(int vacation_days) {
+    if (vacation_days < 0) return false;
+    return true;
+}
+bool sickDaysCorrectness(int sick_days) {
+    if (sick_days < 0) return false;
+    return true;
+}
 
-void menu() {
-    printf("1. Aggiungi o modifica un nome di dipartimento\n");
+void menu() { // funzione che stampa il menu senza che sia inserito nel main per rendere le cose più ordinate
+    printf("1. Modifica un nome di dipartimento\n");
     printf("2. Aggiungi un nuovo dipendente\n");
     printf("3. Elimina un dipendente\n");
     printf("4. Aumenta il salario di un dipendente\n");
@@ -310,83 +491,151 @@ void menu() {
     printf("10. Stampa i dipendenti di un certo dipartimento\n");
     printf("11. Stampa i giorni di vacanza rimanenti per dipendente\n");
     printf("12. Sposta un dipendente da un dipartimento a un altro\n");
-    printf("13. Esci\n");
+    printf("13. Aggiungi un dipartimento\n");
+    printf("14. Esci\n");
 }
 
 int main() {
     struct EList* employees = initEList();
     struct DList* departments = initDList();
 
-    loadData(employees, departments);
+    loadData(employees, departments); // ogni avvio del programma carica i dati dal file data.txt
 
+    //inizializzazione delle variabili che potrebbero essere utilizzate nel programma
     int choice;
     char name[MAX_NAME+1];
     char surname[MAX_SURNAME+1];
     char tax_id[MAX_TAX_ID+1];
-    int salary;
-    int vacation_days;
-    int level;
+    char salary[20];
+    char vacation_days[20];
+    char sick_days[20];
+    char level[20];
+    char amount[20];
+    char days[20];
+    int salary_int;
+    int vacation_days_int;
+    int sick_days_int;
+    int level_int;
     char department[MAX_DEPARTMENT+1];
     char old_name[MAX_DEPARTMENT+1];
     char new_name[MAX_DEPARTMENT+1];
-    int amount;
-    int days;
+    int amount_int;
+    int days_int;
+    char* endptr;
+    //
 
     while (1) {
-        menu();
-        printf("Scegli un'opzione: ");
-        scanf("%d", &choice);
+        printf("\n");
+        printf("********** MENU **********\n");
+        menu(); //stampa il menu
+        printf("Scegli un'opzione: "); 
+        scanf("%d", &choice); // legge la scelta dell'utente
 
-        switch (choice) {
+        switch (choice) { //switch case per gestire le scelte dell'utente
             case 1:
+
                 printf("Inserisci il nome del dipartimento da modificare: ");
                 scanf("%s", old_name);
+                if (!departmentExists(old_name,departments)) { printf("Nome del dipartimento non valido\n"); break; }
+
                 printf("Inserisci il nuovo nome del dipartimento: ");
                 scanf("%s", new_name);
-                modifyDepartment(departments, old_name, new_name);
+                if (!departmentCorrectness(new_name,departments)) { printf("Nome del dipartimento non valido\n"); break; }
+
+                modifyDepartment(departments,employees, old_name, new_name);
                 break;
             case 2:
                 printf("Inserisci il nome del dipendente: ");
                 scanf("%s", name);
+                if (!nameCorrectness(name)) { printf("Nome del dipendente non valido\n"); break; }
+
                 printf("Inserisci il cognome del dipendente: ");
                 scanf("%s", surname);
+                if (!surnameCorrectness(surname)) { printf("Cognome del dipendente non valido\n"); break; }
+
                 printf("Inserisci il codice fiscale del dipendente: ");
                 scanf("%s", tax_id);
+                if (!taxIDCorrectness(tax_id, employees)) { printf("Codice fiscale non valido o già esistente\n"); break; }
+
                 printf("Inserisci il salario annuale del dipendente: ");
-                scanf("%d", &salary);
+                scanf("%s", salary);
+                salary_int = strtol(salary, &endptr, 10);
+                if (*endptr != '\0') { printf("Salario non valido\n"); break; }
+                if (!salaryCorrectness(salary_int)) { printf("Salario non valido\n"); break; }
+
                 printf("Inserisci i giorni di vacanza del dipendente: ");
-                scanf("%d", &vacation_days);
+                scanf("%s", vacation_days);
+                vacation_days_int = strtol(vacation_days, &endptr, 10);
+                if (*endptr != '\0') { printf("Giorni di vacanza non validi\n"); break; }
+                if (!vacationDaysCorrectness(vacation_days_int)) { printf("Giorni di vacanza non validi\n"); break; }
+
+                printf("Inserisci i giorni di malattia del dipendente: ");
+                scanf("%s", sick_days);
+                sick_days_int = strtol(sick_days, &endptr, 10);
+                if (*endptr != '\0') { printf("Giorni di malattia non validi\n"); break; }
+                if (!sickDaysCorrectness(sick_days_int)) { printf("Giorni di malattia non validi\n"); break; }
+
                 printf("Inserisci il dipartimento del dipendente: ");
                 scanf("%s", department);
+                if (!departmentExists(department,departments)) { printf("Nome del dipartimento non valido\n"); break; }
+
                 printf("Inserisci il livello del dipendente: ");
-                scanf("%d", &level);
-                Einsert(employees, name, surname, tax_id, salary, vacation_days, department, level);
+                scanf("%s", level);
+                level_int = strtol(level, &endptr, 10);
+                if (*endptr != '\0') { printf("Livello non valido\n"); break; }
+
+                Einsert(employees, name, surname, tax_id, salary_int, vacation_days_int, sick_days_int, department, level_int); 
                 break;
             case 3:
+
                 printf("Inserisci il codice fiscale del dipendente da eliminare: ");
                 scanf("%s", tax_id);
+                if(!taxIDExists(tax_id, employees)) { printf("Codice fiscale non valido o non esistente\n"); break; }
                 deleteEmployee(employees, tax_id);
                 break;
+
             case 4:
+
                 printf("Inserisci il codice fiscale del dipendente: ");
                 scanf("%s", tax_id);
+                if(!taxIDExists(tax_id, employees)) { printf("Codice fiscale non valido\n"); break; }
+
                 printf("Inserisci l'importo dell'aumento: ");
-                scanf("%d", &amount);
-                increaseSalary(employees, tax_id, amount);
+                scanf("%s", amount);
+                amount_int = strtol(amount, &endptr, 10);
+                if (*endptr != '\0') { printf("Importo non valido\n"); break; }
+                if (!salaryCorrectness(amount_int)) { printf("Importo non valido\n"); break; }
+
+                increaseSalary(employees, tax_id, amount_int);
                 break;
             case 5:
+
                 printf("Inserisci il codice fiscale del dipendente: ");
                 scanf("%s", tax_id);
+                if(!taxIDExists(tax_id, employees)) { printf("Codice fiscale non valido\n"); break; }
+
                 printf("Inserisci i giorni di vacanza da assegnare: ");
-                scanf("%d", &days);
-                assignVacationDays(employees, tax_id, days);
+                scanf("%s", days);
+                days_int = strtol(days, &endptr, 10);
+                if (*endptr != '\0') { printf("Giorni di vacanza non validi\n"); break; }
+                if (!vacationDaysCorrectness(days_int)) { printf("Giorni di vacanza non validi\n"); break; }
+
+                assignVacationDays(employees, tax_id, days_int);
                 break;
+
             case 6:
+
                 printf("Inserisci il codice fiscale del dipendente: ");
                 scanf("%s", tax_id);
+                if(!taxIDExists(tax_id, employees)) { printf("Codice fiscale non valido\n"); break; }
+
                 printf("Inserisci i giorni di malattia da assegnare: ");
-                scanf("%d", &days);
-                assignSickDays(employees, tax_id, days);
+                scanf("%s", days);
+                days_int = strtol(days, &endptr, 10);
+                if (*endptr != '\0') { printf("Giorni di malattia non validi\n"); break; }
+                if (!vacationDaysCorrectness(days_int)) { printf("Giorni di malattia non validi\n"); break; }
+
+                assignSickDays(employees, tax_id, days_int);
                 break;
             case 7:
                 printDepartments(departments);
@@ -402,6 +651,7 @@ int main() {
             case 10:
                 printf("Inserisci il nome del dipartimento: ");
                 scanf("%s", department);
+                if (!departmentExists(department,departments)) { printf("Nome del dipartimento non valido\n"); break; }
                 printEmployeesByDepartment(employees, department);
                 break;
             case 11:
@@ -410,12 +660,26 @@ int main() {
             case 12:
                 printf("Inserisci il codice fiscale del dipendente: ");
                 scanf("%s", tax_id);
+                if(!taxIDExists(tax_id, employees)) { printf("Codice fiscale non valido\n"); break; }
+
                 printf("Inserisci il nuovo dipartimento del dipendente: ");
                 scanf("%s", department);
+                if(!departmentExists(department,departments)) { printf("Nome del dipartimento non valido\n"); break; }
+                
+
                 moveEmployee(employees, tax_id, department);
+                printf("Dipendente spostato con successo\n");
                 break;
             case 13:
+                printf("Inserisci il nome del nuovo dipartimento: ");
+                scanf("%s", department);
+                if(departmentExists(department,departments)) { printf("Nome del dipartimento non valido\n"); break; }
+                Dinsert(departments, department);
+                printf("Dipartimento creato con successo\n");
+                break;
+            case 14:
                 saveData(employees, departments);
+                printf("Dati salvati con successo\n");
                 return 0;
             default:
                 printf("Opzione non valida\n");
