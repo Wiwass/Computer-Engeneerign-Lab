@@ -1,0 +1,67 @@
+Exercise 1.
+Write a program in C to count and print the number of words and characters in the two text files whose names are requested to the user of the program.
+After that merge the two files and write them to another file, whose name shall be univocal in the folder, and print the filename, the size and the permissions (read/write/execute) of this new file.
+Then encrypt this new file by using the following algorithm.
+Given a character, transform it in a new one that is located offset positions further in the alphabet
+The alphabet considered is:
+The one included between the characters n.32 and n.126 of the ascii table, characters not included in this alphabet shall not be encrypted and shall remain unchanged.
+The alphabet is cyclical: after the character n.126 there is the one n.32
+For example, with offset = 4
+the character 'a' becomes 'e'
+the letter 'X' becomes ‘\'
+the letter 'x' becomes ‘|’
+Use 12 as offset value.
+Write the encrypted content in a new file, in the current folder, whose name is the filename to be encrypted + the suffix ".enc".
+Consider as input example to your program the two files poem1.txt and poem2.txt (included in the archive poems.zip) 
+Please include comments to describe the sections of your code
+
+
+Exercise 2.
+Write a C program that reads two sequences of blanks separated non-negative integer values (not longer than 100 items) from two files whose names are passed as arguments to the program and stores them in an array and
+- finds frequency of each element in the array and prints such frequencies,
+- deletes duplicate elements in the array, sorting the remaining elements in descending order and prints them.
+Consider as input example to your program the two files sequence1.txt and sequence2.txt (included in the archive sequences.zip) 
+Please include comments to describe the sections of your code
+
+
+Exercise 3.
+Create a program that reads the 20 files motogp1.csv ... motogp22.csv (included in the archive motogp.zip) containing the MotoGP championship results of the 20 motorcycle races of the previous year. Each line in the files contains the following information: driver initial of the name and surname, driver country, team name, moto manufacturer, points achieved in the race separated by ';' character. Note that we can consider that the driver column is composed, at most, by 18 characters, country column by 12, team name by 27 and moto manufacturer column by 7.
+
+In the C language program, you have to include the following steps:
+
+- Read each results file in sequence (that's from motogp1.csv to motogp20.csv)
+- Use linked lists to manage drivers, teams and moto manufacturers points
+- Calculate the total points of every driver, team and moto manufacturer after each motorcycle race and save (or print) drivers, teams and moto manufacturers total points after each  motorcycle race in descending order (in different files)
+Consider that each file contains the drivers that achieved points in that motorcycle race therefore when reading a new file the program can read new drivers (that's drivers that did not achieve points in previous motorcycle races)
+Please include comments to describe the sections of your code
+
+
+Exercise 4.
+Write a C program that reads a sequence of historical events (not longer than 100 events) from a file whose name is passed as argument to the program and stores them in a BST according to the start year of the event considering that every row of the file includes two fields separated by the character ';'
+- a string representing an historical event
+- a period of time represented as startYear#endYear when the event is spread over several years or a single startYear when the event ended within the start year
+Use the following data declarations/definitions
+typedef struct
+{
+    int start;
+    int end;
+} interval;
+typedef struct
+{
+    char* eventName;
+    interval period;
+} event;
+struct node
+{
+    event data;
+    struct node* left;
+    struct node* right;
+};
+
+Then
+- print a table with any event and the corresponding period of time according to the ascending order of the events start year,
+- print a table with any event and the corresponding period of time according to the descending order of the events start year,
+- print the height of the BST, the height of a Binary Tree is defined as the maximum depth of any leaf node from the root node, that is, it is the length of the longest path from the root node to any leaf node.
+The period of time may include negative integer values in the case of years BC. Consider as input example to your program the file historicalEvents.csv 
+Please include comments to describe the sections of your code
+
